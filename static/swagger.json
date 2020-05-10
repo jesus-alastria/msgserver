@@ -1,0 +1,122 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Simple communication server.",
+        "version": "1.0.1",
+        "title": "Simple Comm Server",
+        "termsOfService": "Open",
+        "contact": {
+            "email": "hesus.ruiz@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "basePath": "/",
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "paths": {
+        "/write/{sessionKey}": {
+            "post": {
+                "summary": "Writes a data object in the cache",
+                "description": "",
+                "operationId": "write",
+                "consumes": [
+                    "text/plain; charset=utf-8"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "description": "Unique session ID to use for temporary storage of the payload",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "data",
+                        "description": "The object to store in the cache.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WriteResponse"
+                        }
+                    },
+                    "220": {
+                        "description": "no data received in the body",
+                        "schema": {
+                            "$ref": "#/definitions/WriteError"
+                        }
+                    }
+                }
+            }
+        },
+        "/read/{sessionKey}": {
+            "get": {
+                "summary": "Read a data object from the cache",
+                "description": "Reads the data object from the cache. Returns an error if the object can not be found, either because it was never written or because it expired",
+                "operationId": "read",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "sessionKey",
+                        "in": "path",
+                        "description": "The session key that was used by the writer",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the payload if found in the cache, or Null if not found",
+                        "schema": {
+                            "$ref": "#/definitions/ReadResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "WriteResponse": {
+            "type": "object",
+            "properties": {
+                "sessionKey": {
+                    "type": "string"
+                }
+            }
+        },
+        "WriteError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "ReadResponse": {
+            "type": "object",
+            "properties": {
+                "payload": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about the Simple Comms Server",
+        "url": "http://www.github.com/hesusruiz"
+    }
+}
